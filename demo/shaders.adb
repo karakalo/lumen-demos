@@ -70,6 +70,19 @@ procedure Shaders is
    -- The master event-loop flag
    Terminated : Boolean := False;
 
+   ---------------------------------------------------------------------------
+
+   procedure Check is
+      use Lumen;
+      use type Lumen.Binary.Word;
+
+      Err : GL.Enum := GL.Get_Error;
+   begin  -- Check
+      if Err /= GL.GL_NO_ERROR then
+         Put_Line ("Error detected:  " & GL.Enum'Image (Err));
+      end if;
+   end Check;
+
    ------------------------------------------------------------------------
    --
    --  This draws a quad that would normally cover the whole
@@ -136,11 +149,6 @@ begin
    Win.Resize     := Resize_Scene'Unrestricted_Access;
    Win.Key_Press  := Key_Handler'Unrestricted_Access;
 
-   if not Lumen.GL.Load_GL_2_0 then
-      Put_Line("OpenGL 2.0 functions missing");
-      return;
-   end if;
-
    declare
       use Lumen.GL;
       use type Lumen.Binary.Word;
@@ -154,17 +162,20 @@ begin
       --  even in the thin binding.
       --
       Vertex_Shader_Source : String :=
-        "attribute vec4 in_vertex;" &
-        "void main() {" &
-        "    gl_Position = 0.5*in_vertex;" &
-        "    gl_Position.w = 1.0;" &
-        "}" & Character'Val (0);
+         "#version 330 core" &
+         "in vec4 in_vertex;" &
+         "void main() {" &
+         "    gl_Position.xyz = 0.5*in_vertex;" &
+         "    gl_Position.w = 1.0;" &
+         "}" & Character'Val (0);
       Vertex_Shader_Source_Pointer : Pointer :=
         Vertex_Shader_Source'Address;
       Fragment_Shader_Source : String :=
-        "void main() {" &
-        "    gl_FragColor = vec4(0.0, 0.0, 0.75, 1.0);" &
-        "}" & Character'Val (0);
+         "#version 330" &
+         "out vec4 color;" &
+         "void main() {" &
+         "    color = vec4(0.0, 0.0, 0.75, 1.0);" &
+         "}" & Character'Val (0);
       Fragment_Shader_Source_Pointer : Pointer :=
         Fragment_Shader_Source'Address;
    begin
@@ -185,9 +196,11 @@ begin
       Shader_Source (Vertex_Shader, 1,
                      Vertex_Shader_Source_Pointer'Address,
                      System'To_Address (0));
+      Check;
       Shader_Source (Fragment_Shader, 1,
                      Fragment_Shader_Source_Pointer'Address,
                      System'To_Address (0));
+      Check;
 
       ---------------------------------------------------------------------
       --
@@ -198,13 +211,16 @@ begin
       --  Get_Shader_Info_Log.
       --
       Compile_Shader (Vertex_Shader);
+      Check;
       Compile_Shader (Fragment_Shader);
+      Check;
 
       ---------------------------------------------------------------------
       --
       --  This creates the program object.
       --
-      Shader_Program    := Create_Program.all;
+      Shader_Program    := Create_Program;
+      Check;
 
       ---------------------------------------------------------------------
       --
@@ -212,13 +228,16 @@ begin
       --  compiling the sources, to the shader program.
       --
       Attach_Shader (Shader_Program, Vertex_Shader);
+      Check;
       Attach_Shader (Shader_Program, Fragment_Shader);
+      Check;
 
       ---------------------------------------------------------------------
       --
       --  This links the shaders to create a complete GPU program.
       --
       Link_Program (Shader_Program);
+      Check;
 
       ---------------------------------------------------------------------
       --
@@ -226,6 +245,7 @@ begin
       --  OpenGL pipeline.
       --
       Use_Program (Shader_Program);
+      Check;
    end;
 
    Resize_Scene (Lumen.Window.Height (Win),
