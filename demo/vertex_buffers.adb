@@ -27,6 +27,7 @@ with Ada.Real_Time;
 with Lumen.Window;
 with Lumen.Events;
 with Lumen.GL;
+use Lumen;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -147,10 +148,6 @@ begin
    Win.Resize    := Resize_Scene'Unrestricted_Access;
    Win.Key_Press := Key_Handler'Unrestricted_Access;
 
-   if not Lumen.GL.Load_GL_1_5 then
-      Put_Line("Missing OpenGL 1.5 functions");
-   end if;
-
    ------------------------------------------------------------------------
    --
    --  This triggers a resize event which doesn't happen automatically
@@ -198,7 +195,7 @@ begin
       --  tells OpenGL to optimize the buffer for reading.
       --
       Buffer_Data (GL_ARRAY_BUFFER,
-                   12 * Float'Size,
+                   Vertices'Length * (Float'Size / 8),
                    Vertices'Address,
                    GL_STATIC_DRAW);
 

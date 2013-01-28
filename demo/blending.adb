@@ -219,13 +219,13 @@ procedure Blending is
       begin
       	 GL.Tex_Coord (Float (0.0), 1.0);
 	 GL.Vertex (Float (-1.0), -1.0);
-	 
+
       	 GL.Tex_Coord (Float (0.0), 0.0);
          GL.Vertex (Float (-1.0),  1.0);
-	 
+
       	 GL.Tex_Coord (Float (1.0), 1.0);
          GL.Vertex (Float ( 1.0), -1.0);
-	 
+
       	 GL.Tex_Coord (Float (1.0), 0.0);
          GL.Vertex (Float ( 1.0),  1.0);
       end;
@@ -242,13 +242,13 @@ procedure Blending is
       begin
       	 GL.Tex_Coord (Float (0.0), 1.0);
 	 GL.Vertex (Float (-0.5), -0.5);
-	 
+
       	 GL.Tex_Coord (Float (0.0), 0.0);
          GL.Vertex (Float (-0.5),  1.5);
-	 
+
       	 GL.Tex_Coord (Float (1.0), 1.0);
          GL.Vertex (Float ( 1.5), -0.5);
-	 
+
       	 GL.Tex_Coord (Float (1.0), 0.0);
          GL.Vertex (Float ( 1.5),  1.5);
       end;
@@ -311,9 +311,9 @@ begin  -- Blending
 
    Ada.Text_IO.Put_Line ("Bitmap --> " & Ada.Command_Line.Argument(1));
    Ada.Text_IO.Put_Line ("Bitmap --> " & Ada.Command_Line.Argument(2));
-   
+
    Ada.Text_IO.New_Line;
-   
+
    Ada.Text_IO.Put_Line ("Keys:");
    Ada.Text_IO.Put_Line ("Escape --> Exit.");
    Ada.Text_IO.Put_Line ("S      --> Changes source blend factor.");
@@ -333,11 +333,6 @@ begin  -- Blending
 
    Win.Resize     := Window_Resize'Unrestricted_Access;
    Win.Key_Press  := Key_Press'Unrestricted_Access;
-
-   if not GL.Load_GL_1_2 then
-      Ada.Text_IO.Put_Line("Missing OpenGL 1.2 functions, please check OpenGL installation.");
-      return;
-   end if;
 
    -- Set up the viewport and scene parameters
    Set_View (Wide, High);
