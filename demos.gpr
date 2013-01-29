@@ -9,19 +9,19 @@ project Demos is
 
    for Source_Dirs use ("demo");
    for Object_Dir use "demo/obj";
-   for Main use ("colors.adb",
-                 "info.adb",
-                 "sgi_simple.adb",
-                 "spinner.adb",
-                 "texture.adb",
-                 "text1.adb",
-                 "text2.adb",
-                 "multi.adb",
+   for Main use ("blending",
+                 "colors",
+                 "fire",
+                 "info",
+                 "multi",
+                 "sgi_simple",
+                 "shaders",
                  "simple_2d",
                  "simple_3d",
-                 "fire",
-                 "blending",
-                 "shaders",
+                 "spinner",
+                 "text1",
+                 "text2",
+                 "texture",
 		 "vertex_buffers"
                 );
    for Exec_Dir use "bin";
@@ -35,11 +35,11 @@ project Demos is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
+      for Default_Switches ("ada") use ("-gnatwal", "-gnatVa", "-gnat05", "-gnatn", "-fstack-check");
    end Compiler;
 
    package Linker is
-      case Config.oS is
+      case Config.OS is
          when "Windows_NT" =>
             for Default_Switches ("ada") use ("-lglu32","-lopengl32","-lGDI32");
          when "Linux"|"MacOSX" =>
