@@ -2,8 +2,8 @@
 -- Original by Julian Leyh, modified by Chip Richards 8 May 2011 to
 -- fit in with the new dir layout
 
-with "lumen.gpr";
-with "config.gpr";
+with "lumen";
+with "config";
 
 project Nehe is
 

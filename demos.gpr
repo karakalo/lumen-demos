@@ -2,7 +2,7 @@
 -- Chip Richards, NiEstu, Phoenix AZ, Spring 2010
 -- Updated May 2011 for new dir structure
 
-with "lumen.gpr";
+with "lumen";
 with "config";
 
 project Demos is
