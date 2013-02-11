@@ -9,7 +9,8 @@ project Demos is
 
    for Source_Dirs use ("demo");
    for Object_Dir use "demo/obj";
-   for Main use ("blending",
+   for Main use ("attribs",
+                 "blending",
                  "colors",
                  "fire",
                  "info",
