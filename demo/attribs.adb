@@ -211,14 +211,17 @@ begin  -- Attribs
    -- If no font was given on the command line, use the default
    if not Font_Loaded then
       begin
+         -- Check in CWD
          Font.Txf.Load (Tx_Font, Default_Font_Path);
       exception
          when others =>
             begin
+               -- Check in standard data subdir
                Font.Txf.Load (Tx_Font, "data/" & Default_Font_Path);
             exception
                when others =>
                   begin
+                     -- Check in standard data subdir, if idiot, er, user has cd'd into bin
                      Font.Txf.Load (Tx_Font, "../data/" & Default_Font_Path);
                   exception
                      when others =>
