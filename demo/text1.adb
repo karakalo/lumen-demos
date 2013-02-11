@@ -194,6 +194,7 @@ begin  -- Text1
    -- Enter the event loop
    while Lumen.Window.Process_Events(Win) loop
       exit when Terminated;
+      Draw;
    end loop;
 
 end Text1;
