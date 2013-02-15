@@ -1,0 +1,12 @@
+#version 120
+
+// Input data
+uniform vec3 color;
+
+void main()
+{
+
+	// Output color = red
+	glColor = color;
+
+}

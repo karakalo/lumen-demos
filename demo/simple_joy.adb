@@ -29,8 +29,13 @@ procedure Simple_Joy is
 
    ---------------------------------------------------------------------------
 
-   Vertex_Shader_Pathname   : constant String := "data/bgc.vertex.shader";
-   Fragment_Shader_Pathname : constant String := "data/bgc.fragment.shader";
+   -- Shader source stuff
+   type Supported_Shader_Version is ( Shaders_1_20, Shaders_3_3 );
+
+   Vertex_Shader_Pathname_1_20   : constant String := "data/js.vertex.shader.1.20";
+   Fragment_Shader_Pathname_1_20 : constant String := "data/js.fragment.shader.1.20";
+   Vertex_Shader_Pathname_3_3    : constant String := "data/js.vertex.shader.3.3";
+   Fragment_Shader_Pathname_3_3  : constant String := "data/js.fragment.shader.3.3";
 
    -- Keystrokes we care about
    Escape   : constant Events.Key_Symbol := Events.Key_Symbol (Character'Pos (Ada.Characters.Latin_1.ESC));
@@ -58,7 +63,6 @@ procedure Simple_Joy is
    Cross_Elts         : GL.UInt;
    Vertex_Shader_ID   : GL.UInt;
    Fragment_Shader_ID : GL.UInt;
-   Compiled           : Boolean;
    Program_ID         : GL.UInt;
    Color_Loc          : GL.Int;
    Xlat_Loc           : GL.Int;
@@ -228,6 +232,10 @@ procedure Simple_Joy is
 
    -- Initialize graphics
    procedure Init is
+
+      Compiled       : Boolean := False;
+      Picked_Shaders : Supported_Shader_Version := Shaders_1_20;
+
    begin  -- Init
 
       -- Create Lumen window, accepting most defaults
@@ -242,13 +250,37 @@ procedure Simple_Joy is
       GL.Gen_Vertex_Arrays (1, Vertex_Array_ID'Address);
       GL.Bind_Vertex_Array (Vertex_Array_ID);
 
+      -- Pick the correct shader based on supported version
+      begin
+         if Float'Value (GL.Get_String (GL.GL_SHADING_LANGUAGE_VERSION)) >= 3.3 then
+            Picked_Shaders := Shaders_3_3;
+            Ada.Text_IO.Put_Line ("Using 3.3 shader source");
+         else
+            Picked_Shaders := Shaders_1_20;
+            Ada.Text_IO.Put_Line ("Using 1.20 shader source");
+         end if;
+      exception
+         when others =>
+            Ada.Text_IO.Put_Line ("Cannot recognize shader version """ & GL.Get_String (GL.GL_SHADING_LANGUAGE_VERSION) &
+                                     """--using 1.20");
+            Picked_Shaders := Shaders_1_20;  -- lower common denominator?
+      end;
+
       -- Create and compile our GLSL program from the shaders
-      Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname, Vertex_Shader_ID, Compiled);
+      if Picked_Shaders = Shaders_1_20 then
+         Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname_1_20, Vertex_Shader_ID, Compiled);
+      else
+         Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname_3_3, Vertex_Shader_ID, Compiled);
+      end if;
       if not Compiled then
          Ada.Text_IO.Put_Line ("Vertex shader failed to compile.  Error:");
          Ada.Text_IO.Put_Line (Shader.Get_Info_Log (Vertex_Shader_ID));
       end if;
-      Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname, Fragment_Shader_ID, Compiled);
+      if Picked_Shaders = Shaders_1_20 then
+         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_3, Fragment_Shader_ID, Compiled);
+      else
+         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_3, Fragment_Shader_ID, Compiled);
+      end if;
       if not Compiled then
          Ada.Text_IO.Put_Line ("Fragment shader failed to compile.  Error:");
          Ada.Text_IO.Put_Line (Shader.Get_Info_Log (Fragment_Shader_ID));
@@ -346,6 +378,9 @@ begin  -- Simple_Joy
    if Have_JS then
       declare
          use Ada.Text_IO;
+
+         Hit_Char  : Character;
+         Have_Char : Boolean := False;
       begin
          Put_Line ("Axes           " & Natural'Image (Joystick.Axes (Stick)));
          Put_Line ("Buttons        " & Natural'Image (Joystick.Buttons (Stick)));
@@ -357,11 +392,15 @@ begin  -- Simple_Joy
          Min_Axis := Integer'Last;
          Max_Axis := Integer'First;
          while Calibrating loop
+
+            Get_Immediate (Hit_Char, Have_Char);
+            Calibrating := not Have_Char;
+
             while Joystick.Pending (Stick) > 0 loop
                declare
                   use Joystick;
 
-                  Joy : constant Joystick_Event_Data := Next_Event (Stick);
+                  Joy       : constant Joystick_Event_Data := Next_Event (Stick);
                begin
                   case Joy.Which is
                      when Joystick_Button_Press | Joystick_Button_Release =>
@@ -383,8 +422,7 @@ begin  -- Simple_Joy
             Put_Line ("I saw values in the range " & Integer'Image (Min_Axis) & " .. " & Integer'Image (Max_Axis));
             Put_Line ("And away we go!");
          else
-            Put_Line ("I didn't see any axis move ... maybe try that again.");
-            raise Program_Exit;
+            Put_Line ("I didn't see any axis move ... maybe quit and try that again.");
          end if;
       end;
    end if;
