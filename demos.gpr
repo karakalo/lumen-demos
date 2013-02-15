@@ -15,6 +15,7 @@ project Demos is
                  "fire",
                  "info",
                  "multi",
+                 "pot",
                  "sgi_simple",
                  "shaders",
                  "simple_2d",
