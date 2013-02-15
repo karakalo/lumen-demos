@@ -30,12 +30,12 @@ procedure Simple_Joy is
    ---------------------------------------------------------------------------
 
    -- Shader source stuff
-   type Supported_Shader_Version is ( Shaders_1_20, Shaders_3_3 );
+   type Supported_Shader_Version is ( Shaders_1_20, Shaders_3_30 );
 
    Vertex_Shader_Pathname_1_20   : constant String := "data/js.vertex.shader.1.20";
    Fragment_Shader_Pathname_1_20 : constant String := "data/js.fragment.shader.1.20";
-   Vertex_Shader_Pathname_3_3    : constant String := "data/js.vertex.shader.3.3";
-   Fragment_Shader_Pathname_3_3  : constant String := "data/js.fragment.shader.3.3";
+   Vertex_Shader_Pathname_3_30   : constant String := "data/js.vertex.shader.3.30";
+   Fragment_Shader_Pathname_3_30 : constant String := "data/js.fragment.shader.3.30";
 
    -- Keystrokes we care about
    Escape   : constant Events.Key_Symbol := Events.Key_Symbol (Character'Pos (Ada.Characters.Latin_1.ESC));
@@ -240,8 +240,8 @@ procedure Simple_Joy is
       -- Pick the correct shader based on supported version
       begin
          if Float'Value (GL.Get_String (GL.GL_SHADING_LANGUAGE_VERSION)) >= 3.3 then
-            Picked_Shaders := Shaders_3_3;
-            Ada.Text_IO.Put_Line ("Using 3.3 shader source");
+            Picked_Shaders := Shaders_3_30;
+            Ada.Text_IO.Put_Line ("Using 3.30 shader source");
          else
             Picked_Shaders := Shaders_1_20;
             Ada.Text_IO.Put_Line ("Using 1.20 shader source");
@@ -257,7 +257,7 @@ procedure Simple_Joy is
       if Picked_Shaders = Shaders_1_20 then
          Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname_1_20, Vertex_Shader_ID, Compiled);
       else
-         Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname_3_3, Vertex_Shader_ID, Compiled);
+         Shader.From_File (GL.GL_VERTEX_SHADER, Vertex_Shader_Pathname_3_30, Vertex_Shader_ID, Compiled);
       end if;
       if not Compiled then
          Ada.Text_IO.Put_Line ("Vertex shader failed to compile.  Error:");
@@ -266,7 +266,7 @@ procedure Simple_Joy is
       if Picked_Shaders = Shaders_1_20 then
          Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_1_20, Fragment_Shader_ID, Compiled);
       else
-         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_3, Fragment_Shader_ID, Compiled);
+         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_30, Fragment_Shader_ID, Compiled);
       end if;
       if not Compiled then
          Ada.Text_IO.Put_Line ("Fragment shader failed to compile.  Error:");
