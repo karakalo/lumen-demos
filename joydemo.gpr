@@ -11,6 +11,7 @@ project JoyDemo is
    for Source_Dirs use ("demo");
    for Object_Dir use "obj";
    for Main use (
+                 "ffsj",
                  "simple_joy.adb"
                 );
    for Exec_Dir use "bin";
