@@ -387,7 +387,7 @@ begin  -- Simple_Joy
 
          New_Line;
          Put_Line ("Now calibrate your joystick:  move an axis through its entire range ...");
-         Put_Line ("When done, click a joystick button.");
+         Put_Line ("When done, press Enter or click a joystick button.");
 
          Min_Axis := Integer'Last;
          Max_Axis := Integer'First;
