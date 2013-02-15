@@ -264,7 +264,7 @@ procedure Simple_Joy is
          Ada.Text_IO.Put_Line (Shader.Get_Info_Log (Vertex_Shader_ID));
       end if;
       if Picked_Shaders = Shaders_1_20 then
-         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_3, Fragment_Shader_ID, Compiled);
+         Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_1_20, Fragment_Shader_ID, Compiled);
       else
          Shader.From_File (GL.GL_FRAGMENT_SHADER, Fragment_Shader_Pathname_3_3, Fragment_Shader_ID, Compiled);
       end if;
