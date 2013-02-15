@@ -122,19 +122,6 @@ procedure Simple_Joy is
 
       -- Viewport dimensions
       GL.Viewport (0, 0, GL.SizeI (W), GL.SizeI (H));
-
-      -- Set up the projection matrix based on the window's shape--wider than
-      -- high, or higher than wide
-      GL.Matrix_Mode (GL.GL_PROJECTION);
-      GL.Load_Identity;
-
-      if W <= H then
-         Aspect := GL.Double (H) / GL.Double (W);
-         GLU.Ortho_2D (-2.0, 2.0, -2.0 * Aspect, 2.0 * Aspect);
-      else
-         Aspect := GL.Double (W) / GL.Double (H);
-         GLU.Ortho_2D (-2.0 * Aspect, 2.0 * Aspect, -2.0, 2.0);
-      end if;
    end Set_View;
 
    ---------------------------------------------------------------------------
