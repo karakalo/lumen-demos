@@ -7,6 +7,6 @@ void main()
 {
 
 	// Output color = red
-	gl_FragColor = (color, 1.0);
+	gl_FragColor = vec4 (color, 1.0);
 
 }
